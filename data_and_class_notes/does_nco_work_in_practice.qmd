@@ -1,0 +1,123 @@
+---
+title: "Does Nested Clustered Optimization Work in Practice? A Practitioner Scorecard"
+author: "GSE 544 — Spring 2026"
+format:
+  pdf:
+    geometry:
+      - margin=1in
+---
+
+## The question, taken seriously
+
+You want practitioner evidence that Nested Clustered Optimization (NCO) — and its
+sibling, Hierarchical Risk Parity (HRP) — works, not an academic argument that it
+*should*. Fair. But the honest answer is a **chain of claims**, and the honesty is
+the persuasive part: overselling NCO is exactly what makes practitioners distrust
+it. Below is what we can defend, what we cannot, and where the real evidence sits.
+
+## 1. Know what is actually being claimed
+
+The single most common mistake — by skeptics *and* salespeople — is to evaluate
+NCO as a return engine. It is not one, and it never claimed to be.
+
+In Marcos López de Prado's own paper, *A Robust Estimator of the Efficient
+Frontier* (SSRN 3469961), the quantity measured in the Monte Carlo experiment is
+the **distance between the estimated portfolio weights and the *true* optimal
+weights** under a known covariance. The claim is:
+
+> Given noisy estimates, NCO recovers weights *closer to the true optimum* and far
+> *more stable* than Markowitz / the Critical Line Algorithm.
+
+That is an **estimation-error and stability** claim — not "you will earn more."
+A student who attacks NCO with "but does it beat the S&P?" is attacking a claim
+the method never made. Our notebook's framing (robustness of the *optimization*,
+not alpha) is exactly the original claim, faithfully reproduced.
+
+## 2. The prior NCO answers is itself a hard practitioner result
+
+NCO is a response to a finding practitioners already believe in their bones.
+DeMiguel, Garlappi & Uppal, *Review of Financial Studies* (2009), tested 14
+optimization models across 7 datasets: **none consistently beat the naive 1/N
+(equal-weight) portfolio** on Sharpe ratio, certainty-equivalent return, or
+turnover. Their memorable figure: to estimate a 25-asset mean-variance problem
+reliably enough to beat 1/N, you would need roughly **3,000 months** (~250 years)
+of return data.
+
+This is *why* a large fraction of real institutional money runs 1/N, risk parity,
+or other estimation-light schemes — and *why* a method that fixes the
+**instability** of optimization is valuable even if it does not beat 1/N on
+return. NCO is not competing with the market; it is competing with "the optimizer
+exploded again."
+
+## 3. The independent real-data record — stated plainly, both sides
+
+These are independent studies on real data (not the author's own, not ours):
+
+| Study | Universe / period | What they found |
+|---|---|---|
+| NUAM market, arXiv 2509.03712 (2025) | 54 Latin-American stocks, Jul 2019 – Jun 2025 | HRP **lost** on annual return (−0.3% vs Max-Sharpe 14.2%) and Sharpe (−0.28 vs 0.43), but **won** on max drawdown (−45.2% vs −50.0% for 1/N) and volatility (15.5% vs 17.5%). Verdict: HRP suits "investors seeking a diversification framework focused on **risk control**." |
+| *Future Generation Computer Systems* (2025) | S&P 500 constituents, 2005–2023 | **1/N outperformed HRP across *all* experimental setups** on out-of-sample risk-adjusted return. (The paper's contribution was a fast implementation; the performance result is a candid negative.) |
+| López de Prado MCOS, original (Monte Carlo) | Synthetic, known truth | NCO sharply reduces RMSE of estimated weights vs CLA — but this is *simulation*, with the truth assumed known. |
+
+The pattern across the independent evidence is consistent and worth memorizing:
+
+- **Lower out-of-sample variance, drawdown, turnover, weight instability — yes,
+  this replicates.**
+- **Higher return or Sharpe than simple benchmarks — no, not reliably;
+  regime- and universe-dependent.**
+
+Claim only the part that replicates. That restraint is the credible position.
+
+## 4. The practitioner credential is provenance and tooling — not a public P&L
+
+There is **no published live track record** that says "Fund X ran NCO and here is
+the audited return stream." Proprietary allocation methods are precisely what
+firms do not disclose. Be upfront about this with anyone you present to; pretending
+otherwise destroys credibility. What we *do* have:
+
+- **Provenance.** NCO/HRP were built by Marcos López de Prado *inside* production
+  allocation shops: HRP at **Guggenheim Partners** (2016), the ML allocation work
+  at **AQR**, and he is now **Global Head of Quantitative R&D at the Abu Dhabi
+  Investment Authority (ADIA)** — a ~$1T sovereign wealth fund — and a founding
+  board member of **ADIA Lab**. This is adoption *by the author in his day job of
+  allocating institutional capital*, not a paper written from the sidelines.
+- **Independent tooling adoption.** The method has been independently
+  re-implemented as commercial / production-grade software by **skfolio**
+  (`NestedClustersOptimization`), **Hudson & Thames** (mlfinlab / PortfolioLab),
+  **Riskfolio-Lib**, **PyPortfolioOpt**, the R **ClusterPortfolios** package, and
+  **MATLAB's** Financial Toolbox; **NVIDIA** uses HRP as its canonical worked
+  robo-advisor example. Commercial vendors do not maintain libraries nobody pays
+  to use. This is circumstantial, but it is the *same kind* of evidence
+  practitioners themselves act on.
+
+## 5. The strongest evidence available to *you* is the experiment you ran
+
+Every external study has confounds: different data, rebalancing, constraints,
+implementation choices. Our notebook (`4_copula_nco.ipynb`) does not. It holds
+**identical** marginals, copula family, per-asset clip, Monte Carlo size, and
+optimizer across both portfolios, and varies **only the structure**: the
+all-19 solve levers to roughly 16× gross and collapses out of sample; the nested
+portfolio stays contained and survives. A controlled experiment you ran yourself,
+with no free parameters to hide a result in, is *stronger* evidence for the
+mechanism than any vendor white paper.
+
+## Bottom line
+
+> The practitioner case for NCO is **not** "it earns more." It is: *it stops the
+> optimizer from blowing up on its own estimation noise* — and that narrower
+> claim is the one the independent evidence, and our own controlled experiment,
+> actually support. State the claim that size, and it holds.
+
+## Sources
+
+- López de Prado, *A Robust Estimator of the Efficient Frontier*, SSRN 3469961.
+- López de Prado (2016), *Building Diversified Portfolios that Outperform
+  Out-of-Sample* (Hierarchical Risk Parity), *Journal of Portfolio Management*.
+- DeMiguel, Garlappi & Uppal (2009), *Optimal Versus Naive Diversification*,
+  *Review of Financial Studies* 22(5), 1915–1953.
+- HRP in the Latin-American NUAM market, arXiv:2509.03712 (2025).
+- *Hierarchical Risk Parity: Efficient Implementation and Real-World Analysis*,
+  *Future Generation Computer Systems* 167 (2025).
+- skfolio `NestedClustersOptimization` documentation; Hudson & Thames mlfinlab
+  NCO documentation; NVIDIA RAPIDS HRP technical blog.
+- López de Prado role: Abu Dhabi Investment Authority / ADIA Lab.
