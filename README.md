@@ -1,8 +1,16 @@
 # GSE 544 — Homework Five, Part 2
 ## A Copula/NCO Horse Race Under Realistic Constraints
 
+---
+
+## Acknowledgement
+
+I used Claude (Anthropic) and the class notebooks provided by the instructor to complete this assignment. The code closely follows the lecture notebook `4_copula_nco.ipynb` from the course repository, extended with long-only and no-borrowing constraints and CRRA utility for two risk-aversion regimes.
+
+---
+
 **Course:** GSE 544, Spring 2026  
-**Deliverable:** Jupyter notebook (`HW5_part2_solution.ipynb`) submitted via GitHub repo URL  
+**Deliverable:** Jupyter notebook (`A_Copula_NCO_Horse_Race_Under_Realistic_Constraints.ipynb`)  
 **Data:** `vmls_portfolio_returns.csv` · `copula_model.pkl` (from class repo `06_Portfolio_optimization_and_copulas/`)
 
 ---
@@ -95,39 +103,16 @@ In particular, how do the optimized portfolios compare to the 1/N benchmark at $
 
 ---
 
-## Key Results
-
-### Weight summary
-
-| | NCO (A) RF share | All-at-once (B) RF share | 1/N RF share |
-|---|---|---|---|
-| **γ = 1** | 0.0% | 0.0% | 5.0% |
-| **γ = 3** | **13.1%** | 0.0% | 5.0% |
-
-At γ=1, both optimized portfolios concentrate entirely into stocks 3 and 14. NCO's across-cluster step assigns 100% to a single cluster in both regimes, eliminating cross-cluster diversification.
-
-### Out-of-sample horse race
-
-| Portfolio | Final wealth | Mean log-growth | Worst day |
-|---|---|---|---|
-| **1/N** | **$14,910** | **+0.00080** | **−2.68%** |
-| NCO γ=1 | $13,482 | +0.00060 | −4.49% |
-| All-at-once γ=1 | $13,113 | +0.00054 | −4.70% |
-| NCO γ=3 | $13,779 | +0.00064 | −3.12% |
-| All-at-once γ=3 | $14,048 | +0.00068 | −3.06% |
-
-**1/N wins every metric in every regime.**
-
----
-
 ## File Structure
 
 ```
 .
-├── README.md                        # This file
-├── HW5_part2_solution.ipynb         # Solution notebook (submit this URL)
-├── vmls_portfolio_returns.csv       # Return data (from class repo)
-└── copula_model.pkl                 # Fitted copula model (from class repo)
+├── README.md                              # This file
+├── A_Copula_NCO_Horse_Race_Under_Realistic_Constraints.ipynb   # Solution notebook
+└── data_and_class_notes/
+    ├── vmls_portfolio_returns.csv         # Return data (from class repo)
+    ├── copula_model.pkl                   # Fitted copula model (from class repo)
+    └── 4_copula_nco.ipynb                 # Lecture notebook (reference)
 ```
 
 ## Dependencies
@@ -137,6 +122,7 @@ numpy
 pandas
 scipy
 matplotlib
+seaborn
 ```
 
 ## Reference
